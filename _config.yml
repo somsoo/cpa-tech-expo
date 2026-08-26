@@ -1,0 +1,8 @@
+﻿title: "IT 테크 & 데이터센터 전시회 정보"
+description: "2026 데이터센터코리아 사전등록 및 B2B 클라우드, AI 최신 기술 동향을 제공합니다."
+url: "https://data.enjoy-onepage.com"
+theme: minima
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
