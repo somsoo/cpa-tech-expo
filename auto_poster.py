@@ -73,7 +73,7 @@ file_date_str = now.strftime('%Y-%m-%d')
 file_time_str = now.strftime('%H-%M-%S')
 
 # Generate a creative title
-title_prompt = f"'{campaign['name']}' 캠페인에 대한 클릭을 유도하는 30자 이내의 블로그 포스팅 제목을 작성하세요. (특수문자 제외, 본문 없이 제목만 출력)"
+title_prompt = f"이 글은 구글 검색 유입(SEO)을 극대화해야 합니다. 타겟 고객이 검색할 만한 '롱테일 키워드(세부 질문, 고민거리)'를 자연스럽게 포함하여 40~60자 길이의 제목을 작성하세요. 단순 광고처럼 보이지 않고, 유용한 '꿀팁 정보글'처럼 보여서 클릭하지 않고는 못 배기게 만드세요. ('{campaign['name']}' 캠페인 관련, 특수문자 제외, 본문 없이 제목만 출력)"
 title_response = model.generate_content(title_prompt)
 title = title_response.text.strip().replace('"', '').replace("'", "")
 
