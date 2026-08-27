@@ -28,7 +28,36 @@ if not campaigns:
     print("No campaigns available.")
     exit(1)
 
-campaign = random.choice(campaigns)
+
+# Date Filter Logic
+import pytz
+from datetime import datetime
+try:
+    kst = pytz.timezone('Asia/Seoul')
+    today = datetime.now(kst)
+    valid_campaigns = []
+    for c in campaigns:
+        end_date_str = c.get('end_date')
+        if not end_date_str:
+            valid_campaigns.append(c)
+        else:
+            try:
+                # Parse YYYY-MM-DD
+                end_date = datetime.strptime(end_date_str.strip(), "%Y-%m-%d")
+                end_date = kst.localize(end_date.replace(hour=23, minute=59, second=59))
+                if today <= end_date:
+                    valid_campaigns.append(c)
+            except Exception as e:
+                print(f"Date parse error for {c.get('name')}: {e}")
+                valid_campaigns.append(c)
+    if not valid_campaigns:
+        print("No valid campaigns available (all expired).")
+        exit(1)
+    campaign = random.choice(valid_campaigns)
+except Exception as e:
+    print("Fallback in date filter:", e)
+    campaign = random.choice(campaigns)
+
 
 # =================================================================
 # 1. 리얼 데이터 기반 SEO (네이버 자동완성/연관검색어 실시간 추출)
