@@ -13,7 +13,11 @@ if not api_key:
     exit(1)
 
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-3.5-flash')
+# Rotate between Gemini 3.x Lite models to avoid rate limits and optimize cost
+model_choices = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']
+selected_model_name = random.choice(model_choices)
+model = genai.GenerativeModel(selected_model_name)
+print(f"Selected Gemini Model: {selected_model_name}")
 
 # Load campaigns
 campaigns_file = 'campaigns.json'
