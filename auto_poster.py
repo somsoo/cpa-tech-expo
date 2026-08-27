@@ -75,8 +75,23 @@ prompt = f"""
 출력은 2-Pass를 거친 최종 '본문 내용'만 해주세요.
 """
 
-response = model.generate_content(prompt)
-body_content = response.text.strip()
+max_retries = 3
+for attempt in range(max_retries):
+    response = model.generate_content(prompt)
+    body_content = response.text.strip()
+    
+    # 3-Pass Validation Check
+    has_button = "href=" in body_content or "<a " in body_content
+    has_image = "source.unsplash.com" in body_content or "<img" in body_content or "![" in body_content
+    
+    if has_button and has_image:
+        break
+    else:
+        error_msgs = []
+        if not has_button: error_msgs.append("수익화 버튼(a 태그) 누락")
+        if not has_image: error_msgs.append("이미지(unsplash 등) 누락")
+        prompt += f"\n\n[시스템 경고] {', '.join(error_msgs)} 되었습니다. 반드시 버튼과 이미지를 포함해 다시 작성하세요."
+
 
 # AI 오류 방어 (Frontmatter 제거)
 import re
