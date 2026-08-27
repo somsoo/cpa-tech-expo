@@ -63,17 +63,9 @@ campaign = random.choice(campaigns)
 # 3. Real-time SEO Trend Extraction
 # =================================================================
 main_keyword = campaign.get('keywords', [campaign['name']])[0]
-real_keywords = [main_keyword]
-try:
-    url = f'https://mac.search.naver.com/mobile/ac?q={main_keyword}&st=1&r_format=json&q_enc=UTF-8'
-    res = requests.get(url, timeout=5)
-    data = res.json()
-    if 'items' in data and len(data['items']) > 0 and len(data['items'][0]) > 0:
-        real_keywords = [item[0] for item in data['items'][0][:4]]
-except Exception as e:
-    print('Trend API fetch failed, using fallback:', e)
-
-keyword_str = ', '.join(real_keywords)
+from keyword_miner import get_golden_keyword_kr
+golden_keyword = get_golden_keyword_kr(main_keyword)
+keyword_str = golden_keyword
 print(f'Extracted Keywords: {keyword_str}')
 
 # =================================================================
