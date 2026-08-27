@@ -176,9 +176,7 @@ try:
     # 파일이 없으면 헤더 달고 생성
     if not os.path.exists(log_file):
         with open(log_file, 'w', encoding='utf-8') as lf:
-            lf.write("# 📝 자동 포스팅 발행 대장
-
-")
+            lf.write("# 📝 자동 포스팅 발행 대장\n\n")
             
     with open(log_file, 'a', encoding='utf-8') as lf:
         lf.write(log_entry)
