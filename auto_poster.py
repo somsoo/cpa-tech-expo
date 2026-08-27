@@ -164,4 +164,26 @@ filename = f"_posts/{file_date_str}-{file_time_str}.md"
 with open(filename, 'w', encoding='utf-8') as f:
     f.write(final_post)
 
+# -------------------------------------------------------------
+# 4. POST_LOG.md (발행 대장) 기록
+# -------------------------------------------------------------
+try:
+    log_file = "POST_LOG.md"
+    platform = campaign.get('platform', '기타')
+    camp_name = campaign.get('name', '이름없음')
+    log_entry = f"- `{file_date_str}` | [{platform}] {camp_name} | {title}
+"
+    
+    # 파일이 없으면 헤더 달고 생성
+    if not os.path.exists(log_file):
+        with open(log_file, 'w', encoding='utf-8') as lf:
+            lf.write("# 📝 자동 포스팅 발행 대장
+
+")
+            
+    with open(log_file, 'a', encoding='utf-8') as lf:
+        lf.write(log_entry)
+except Exception as e:
+    print("Log write failed:", e)
+
 print(f"✅ Generated {filename}")
