@@ -103,7 +103,7 @@ prompt = f"""
 [필수 구조]
 1. 글 중간중간에 자연스럽게 버튼 형태의 CPA 링크를 2회 이상 삽입하세요.
 (버튼 HTML 예시: <div style="text-align: center; margin: 20px 0;"><a href="{campaign['link']}" style="background-color: #ff5722; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px;" target="_blank">👉 무료 상담 신청하기</a></div>)
-2. 글의 내용과 어울리는 고화질 언스플래쉬 이미지 URL(https://source.unsplash.com/800x600/?{main_keyword})을 마크다운 형태로 2장 이상 삽입하세요.
+2. 글의 내용과 어울리는 고화질 언스플래쉬 이미지 URL(https://image.pollinations.ai/prompt/{main_keyword}_simple_flat_vector_illustration?width=800&height=600&nologo=true)을 마크다운 형태로 2장 이상 삽입하세요.
 
 출력은 2-Pass를 거친 최종 '본문 내용'만 해주세요.
 """
@@ -122,7 +122,7 @@ for attempt in range(max_retries):
     else:
         error_msgs = []
         if not has_button: error_msgs.append("수익화 버튼(a 태그) 누락")
-        if not has_image: error_msgs.append("이미지(unsplash 등) 누락")
+        if not has_image: error_msgs.append("이미지(pollinations 등) 누락")
         prompt += f"\n\n[시스템 경고] {', '.join(error_msgs)} 되었습니다. 반드시 버튼과 이미지를 포함해 다시 작성하세요."
 
 
