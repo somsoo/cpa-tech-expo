@@ -171,8 +171,7 @@ try:
     log_file = "POST_LOG.md"
     platform = campaign.get('platform', '기타')
     camp_name = campaign.get('name', '이름없음')
-    log_entry = f"- `{file_date_str}` | [{platform}] {camp_name} | {title}
-"
+    log_entry = f"- `{file_date_str}` | [{platform}] {camp_name} | {title}\n"
     
     # 파일이 없으면 헤더 달고 생성
     if not os.path.exists(log_file):
