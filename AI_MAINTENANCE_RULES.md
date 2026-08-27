@@ -16,7 +16,7 @@ API 비용을 아끼겠다고 글쓰기 단계를 1~2개로 압축하지 마세�
 
 ## 4. 🎨 덜어냄의 미학: 심플 & 클리어 실사 이미지 생성 (Pollinations)
 - **Over-prompting 금지:** 3D 렌더링, 8k, 복잡한 질감 등 화려한 수식어를 떡칠하면 오히려 이미지가 뭉개지는 CG 현상이 발생합니다. 절대 과시형 프롬프트를 쓰지 마세요.
-- **상징물 1개 추출:** 글 주제를 상징하는 **단일 무생물 사물(ONE symbolic inanimate object)** 하나만 영어로 추출하세요.
+- **상징물 1개 추출:** 글 주제를 상징하는 **무생물 사물 또는 자연스러운 사물들의 조합(e.g., 동전과 계산기, 분무기와 스펀지)**을 영어로 추출하세요.
 - **심플 프롬프트 고정:** Pollinations URL에 넘기는 프롬프트는 무조건 다음 형식을 고정으로 사용하세요:
-  `A realistic photograph of a {obj_name} on a clean desk, bright natural lighting, simple and clear`
+  `A realistic photograph of {obj_name} on a clean desk, bright natural lighting, simple and clear`
 - 다운로드 받은 이미지(WebP 변환 800x800)를 `assets/images/`에 저장하는 로직을 보존하세요.
