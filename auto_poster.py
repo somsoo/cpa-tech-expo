@@ -111,7 +111,7 @@ for attempt in range(max_retries):
     
     # 3-Pass Validation Check
     has_button = "href=" in body_content or "<a " in body_content
-    has_image = "source.unsplash.com" in body_content or "<img" in body_content or "![" in body_content
+    has_image = "pollinations.ai" in body_content or "<img" in body_content or "![" in body_content
     
     if has_button and has_image:
         break
