@@ -105,19 +105,18 @@ def create_text_thumbnail(text, filename_prefix):
 
 def download_vibe_image(prompt, filename_prefix):
     os.makedirs('assets/images', exist_ok=True)
-    img_path = f'assets/images/{filename_prefix}.webp'
-    
-    encoded_prompt = urllib.parse.quote(f"A minimalistic aesthetic interior photo related to {prompt}, bright lighting, high quality, soft colors, unsplash style")
-    img_url = f'https://image.pollinations.ai/prompt/{encoded_prompt}?width=800&height=500&nologo=true&private=true&model=flux'
+    img_path = f'assets/images/{filename_prefix}.jpg'
+    keywords = ','.join([p.strip().replace(' ', '') for p in prompt.split(',')])
+    url = f"https://loremflickr.com/800/500/{keywords}/all"
     try:
-        r = requests.get(img_url, timeout=120)
+        r = requests.get(url, timeout=10, allow_redirects=True)
         if r.status_code == 200:
-            img = Image.open(io.BytesIO(r.content)).convert('RGB')
-            img.save(img_path, 'WEBP', quality=80)
+            with open(img_path, 'wb') as f:
+                f.write(r.content)
             return img_path
     except Exception as e:
         print(f"Vibe image failed: {e}")
-    return None
+    return ""
 
 def generate_post():
     # [Pass 4: Thumbnail Catchphrase]
