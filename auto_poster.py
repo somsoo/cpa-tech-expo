@@ -10,12 +10,12 @@ import google.generativeai as genai
 import pytz
 import io
 try:
-    from PIL import Image
+    from PIL import Image, ImageDraw, ImageFont
 except ImportError:
     pass
 
 # =================================================================
-# 1. API & Failover Setup (Dynamic Rotation)
+# 1. API Setup
 # =================================================================
 api_keys_str = os.environ.get('GEMINI_API_KEY', '')
 if not api_keys_str:
@@ -27,7 +27,6 @@ MODELS = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']
 
 def generate_with_retry(prompt, is_json=False):
     generation_config = {"response_mime_type": "application/json"} if is_json else None
-    
     for key in API_KEYS:
         genai.configure(api_key=key)
         for model_name in MODELS:
@@ -39,7 +38,6 @@ def generate_with_retry(prompt, is_json=False):
                 print(f"Fallback triggered: Failed on {model_name} with key ...{key[-4:]} -> {e}")
                 time.sleep(2)
                 continue
-                
     raise Exception("Critical: All API keys and models are exhausted!")
 
 # =================================================================
@@ -52,7 +50,6 @@ if not os.path.exists(campaigns_file):
 
 with open(campaigns_file, 'r', encoding='utf-8') as f:
     campaigns = json.load(f)
-
 if not campaigns:
     print('No campaigns available.')
     exit(1)
@@ -60,7 +57,7 @@ if not campaigns:
 campaign = random.choice(campaigns)
 
 # =================================================================
-# 3. Real-time SEO Trend Extraction
+# 3. Keyword Extraction
 # =================================================================
 main_keyword = campaign.get('keywords', [campaign['name']])[0]
 real_keywords = [main_keyword]
@@ -74,138 +71,198 @@ except Exception as e:
     print('Trend API fetch failed, using fallback:', e)
 
 keyword_str = ', '.join(real_keywords)
-print(f'Extracted Keywords: {keyword_str}')
+best_keyword = real_keywords[0]
 
 # =================================================================
-# 4. Text Generation (3-Pass: Write -> Check -> Revise)
+# 4. Image Generation (Thumbnail + Vibe)
 # =================================================================
-# [Pass 1: 글쓰기 (Write)]
-draft_prompt = f"""
-당신은 제휴마케팅(CPA) 전문가입니다. 다음 캠페인 정보를 바탕으로 블로그 포스팅 뼈대(초안)를 1500자 분량으로 작성하세요.
+def create_text_thumbnail(text, filename_prefix):
+    os.makedirs('assets/images', exist_ok=True)
+    img_path = f'assets/images/{filename_prefix}.webp'
+    
+    img = Image.new('RGB', (800, 800), color=(245, 245, 245))
+    draw = ImageDraw.Draw(img)
+    
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/nanum/NanumGothicBold.ttf", 60)
+    except:
+        font = ImageFont.load_default()
+
+    lines = text.split('\n')
+    y_text = 300
+    for line in lines:
+        try:
+            bbox = draw.textbbox((0, 0), line, font=font)
+            width = bbox[2] - bbox[0]
+            height = bbox[3] - bbox[1]
+        except:
+            width, height = 400, 60
+        draw.text(((800 - width) / 2, y_text), line, font=font, fill=(50, 50, 50))
+        y_text += height + 20
+        
+    img.save(img_path, 'WEBP', quality=90)
+    return img_path
+
+def download_vibe_image(prompt, filename_prefix):
+    os.makedirs('assets/images', exist_ok=True)
+    img_path = f'assets/images/{filename_prefix}.webp'
+    
+    encoded_prompt = urllib.parse.quote(f"A minimalistic aesthetic interior photo related to {prompt}, bright lighting, high quality, soft colors, unsplash style")
+    img_url = f'https://image.pollinations.ai/prompt/{encoded_prompt}?width=800&height=500&nologo=true&private=true&model=flux'
+    try:
+        r = requests.get(img_url, timeout=120)
+        if r.status_code == 200:
+            img = Image.open(io.BytesIO(r.content)).convert('RGB')
+            img.save(img_path, 'WEBP', quality=80)
+            return img_path
+    except Exception as e:
+        print(f"Vibe image failed: {e}")
+    return None
+
+def generate_post():
+    # [Pass 4: Thumbnail Catchphrase]
+    thumb_prompt = f"""
+Create a catchy 2-line hook for a blog thumbnail about: {best_keyword}.
+Rule: No fear-mongering, no extreme words (like bugs, stench). Informational and clean.
+Example format:
+First Line
+Second Line
+"""
+    try:
+        thumb_text = generate_with_retry(thumb_prompt).strip().replace('"', '').replace("'", '')
+    except:
+        thumb_text = f"[{best_keyword}]\n꼭 알아야 할 필수 정보!"
+
+    thumb_filename = f"thumb_{int(time.time())}"
+    thumb_rel_path = create_text_thumbnail(thumb_text, thumb_filename)
+    image_markdown = f"![{best_keyword}]({{{{ '/' | append: '{thumb_rel_path}' | relative_url }}}})\n\n"
+
+    # [Vibe Image Generation]
+    vibe_prompt = f"""
+Translate the following topic into 2 English keywords that represent a clean, aesthetic lifestyle or interior mood. Output ONLY the keywords separated by comma.
+Topic: {best_keyword}
+"""
+    try:
+        vibe_keywords = generate_with_retry(vibe_prompt).strip()
+    except:
+        vibe_keywords = "interior,clean"
+        
+    vibe_rel_path = download_vibe_image(vibe_keywords, f"vibe_{int(time.time())}")
+    vibe_markdown = f"![감성사진]({{{{ '/' | append: '{vibe_rel_path}' | relative_url }}}})" if vibe_rel_path else ""
+
+    # [Pass 1: Draft]
+    draft_prompt = f"""
+당신은 생활 정보와 팁을 제공하는 전문 에디터입니다.
+다음 캠페인 정보와 타겟 키워드를 바탕으로 정보성 블로그 초안(1500자)을 작성하세요.
 
 [캠페인 정보]
 - 이름: {campaign['name']}
 - 혜택: {campaign['benefits']}
-- 주의규칙: {campaign['rules']}
-- 링크: {campaign['link']}
 - 타겟 키워드: {keyword_str}
+
+지침:
+- 너무 자극적이거나 공포감을 주는 단어(벌레, 악취 등)는 절대 금지.
+- 소제목은 반드시 마크다운(##, ###) 사용.
 """
-draft_content = generate_with_retry(draft_prompt).strip()
+    draft_content = generate_with_retry(draft_prompt).strip()
 
-# [Pass 2: 검사 (Check for AEO/SEO/GEO)]
-check_prompt = f"""
-다음은 작성된 블로그 포스팅 초안입니다. 이 초안을 최고 수준의 SEO, AEO(답변 엔진 최적화), GEO(생성형 엔진 최적화) 전문가 관점에서 꼼꼼하게 검사(Check)하고 비판하세요.
-
+    # [Pass 2: Check]
+    check_prompt = f"""
+다음 작성된 초안을 SEO/AEO 관점에서 비판적으로 검토하고 개선사항 5가지를 작성하세요.
 [초안]
 {draft_content}
-
-[검사 지침]
-1. SEO: 롱테일 키워드({keyword_str})가 제목, 서론, 본문에 자연스럽게 배치되었는가?
-2. AEO: 사용자의 직접적인 질문에 명확하게 답변하는 '요약형 문단'이나 'FAQ 구조'가 있는가?
-3. GEO: 지역 정보나 타겟 유저의 구체적 의도에 부합하는가?
-위 세 가지 관점에서 무엇을 어떻게 수정해야 완벽해질지 5가지 피드백을 작성하세요.
 """
-feedback_content = generate_with_retry(check_prompt).strip()
+    feedback_content = generate_with_retry(check_prompt).strip()
 
-# [Pass 3: 수정 (Revise & Tone Polish)]
-rewrite_prompt = f"""
-당신은 수익형 블로그 상위 1% 인플루언서입니다. 
-다음 [초안]에 [전문가 피드백]을 100% 반영하여, AEO/SEO/GEO가 완벽하게 충족된 최종 포스팅을 2000자 내외로 작성하세요(수정).
-주의: AI 특유의 번역투 문장('결론적으로', '안녕하세요 여러분')을 완벽히 삭제하고, 실제 사람이 친한 지인에게 꿀팁을 주듯 매우 자연스럽고 공감 가는 말투로 윤문하세요.
+    # [Pass 3: Rewrite]
+    button_html = f'<div style="text-align: center; margin: 20px 0;"><a href="{campaign["link"]}" style="background-color: #ff5722; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px;" target="_blank">[DYNAMIC_BUTTON_TEXT]</a></div>'
 
-[전문가 피드백 (반드시 반영할 것)]
+    rewrite_prompt = f"""
+당신은 상위 1% 정보 매거진 에디터입니다.
+[초안]에 [전문가 피드백]을 100% 반영하여 2000자 내외의 최종 텍스트를 작성하세요.
+자극적인 단어 없이 깔끔한 정보성 톤앤매너를 유지하세요.
+
+[전문가 피드백]
 {feedback_content}
 
 [초안]
 {draft_content}
 
 [필수 구조 규칙]
-글 중간중간에 자연스럽게 아래 버튼 태그를 2개 이상 삽입하세요. 
-<div style="text-align: center; margin: 20px 0;"><a href="{campaign['link']}" style="background-color: #ff5722; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px;" target="_blank">👉 무료 상담 신청하기</a></div>
+글 서론과 결론 부근에 다음 버튼 HTML 태그를 그대로 2회 삽입하세요.
+단, [DYNAMIC_BUTTON_TEXT] 부분을 문맥에 맞게 매력적인 문구(예: 무료 상담 신청하기, 혜택 확인하기 등)로 수정해서 넣으세요.
+{button_html}
+
+[시각적 강조 규칙 - 반드시 적용]
+1. 본문 중간에 딱 1번 아래의 감성 사진 마크다운을 본문과 가장 자연스러운 위치에 줄바꿈하여 삽입하세요.
+{vibe_markdown}
 """
-body_content = generate_with_retry(rewrite_prompt).strip()
+    final_text = generate_with_retry(rewrite_prompt).strip()
+    final_text = re.sub(r'^---.*?---\s*', '', final_text, flags=re.DOTALL)
+    final_text = re.sub(r'^\s*layout:.*?\n\s*', '', final_text, flags=re.DOTALL)
 
-body_content = re.sub(r'^---.*?---\s*', '', body_content, flags=re.DOTALL)
-body_content = re.sub(r'^\s*layout:.*?\n\s*', '', body_content, flags=re.DOTALL)
+    title_prompt = f"""이 글의 검색 상위 노출을 위한 매력적인 제목 1줄만 출력하세요.
+핵심 키워드 [{best_keyword}] 포함. 큰따옴표 제외."""
+    title = generate_with_retry(title_prompt).strip().replace('"', '').replace("'", '')
 
-# =================================================================
-# 5. Image Generation (Optimized for SEO - WebP Compression)
-# =================================================================
-# [Pass 4: 심플 프롬프트 기반 실사 상징물 이미지 기획]
-image_prompt_gen = f"""
-Based on the topic "{main_keyword}", choose a symbolic inanimate object or a natural combination of a few objects (e.g. golden coin and calculator, spray bottle and sponge) that visually represents the core topic.
-Do NOT include humans or complex landscapes. 
-Output JSON only:
-{{
-    "object": "specific object(s) name in English (e.g., golden coin and calculator, red rubber dog toy)"
-}}
-"""
-try:
-    img_response_text = generate_with_retry(image_prompt_gen, is_json=True)
-    import json
-    img_data = json.loads(img_response_text)
-    obj_name = img_data.get('object', 'abstract object')
-except Exception as e:
-    obj_name = 'simple object'
+    # AdSense Setup (CPA Common Codes)
+    ad_top = '''
+<div class="manual-ad-container" style="margin: 25px 0; text-align: center;">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2228289204702106"
+         data-ad-slot="2231432699"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>'''
+    ad_middle = '''
+<div class="manual-ad-container" style="margin: 25px 0; text-align: center;">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2228289204702106"
+         data-ad-slot="5979106011"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>'''
+    ad_bottom = '''
+<div class="manual-ad-container" style="margin: 35px 0 10px 0; text-align: center;">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2228289204702106"
+         data-ad-slot="2249895363"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>'''
 
-final_img_prompt = f'A realistic photograph of {obj_name} on a clean desk, bright natural lighting, simple and clear'
-encoded_prompt = urllib.parse.quote(final_img_prompt)
-
-kst = pytz.timezone('Asia/Seoul')
-now = datetime.now(kst)
-file_date_str = now.strftime('%Y-%m-%d')
-file_time_str = now.strftime('%H-%M-%S')
-
-os.makedirs('assets/images', exist_ok=True)
-image_filename = f'{file_date_str}-{file_time_str}.webp'
-image_path = f'assets/images/{image_filename}'
-
-print('Requesting Pollinations Image...')
-time.sleep(5)
-img_url = f'https://image.pollinations.ai/prompt/{encoded_prompt}?width=800&height=800&nologo=true&private=true&model=flux'
-try:
-    r = requests.get(img_url, timeout=120)
-    if r.status_code == 200:
-        img_raw = Image.open(io.BytesIO(r.content))
-        if img_raw.mode in ("RGBA", "P"):
-            img_raw = img_raw.convert("RGB")
-        img_raw.thumbnail((800, 800), Image.Resampling.LANCZOS)
-        img_raw.save(image_path, "WEBP", quality=80)
-        
-        markdown_image = f'\n\n![{keyword_str} 관련 실사 3D 아이콘](/{image_path})\n\n'
-        insert_pos = body_content.find('\n', 150)
-        if insert_pos == -1:
-            insert_pos = 150
-        body_content = body_content[:insert_pos] + markdown_image + body_content[insert_pos:]
+    lines = final_text.split('\n')
+    if len(lines) > 10:
+        mid_idx = len(lines) // 2
+        body_content = "\n".join(lines[:mid_idx]) + "\n\n" + ad_middle + "\n\n" + "\n".join(lines[mid_idx:])
     else:
-        print(f'Failed to fetch image: {r.status_code}')
-except Exception as e:
-    print(f'Image processing skipped due to error: {e}')
+        body_content = final_text
+        
+    final_body = image_markdown + ad_top + "\n\n" + body_content + "\n\n" + ad_bottom
+    return title, final_body
 
-# =================================================================
-# 6. Generate Title & Save Post
-# =================================================================
-title_prompt = f"""이 글의 검색 상위 노출을 위해 클릭 유도하는 제목을 작성하세요.
-타겟 롱테일 키워드: [{keyword_str}]
-키워드를 포함하여 40~60자 길이의 매력적인 제목을 한 줄만 출력하세요. (특수문자 제외)"""
-title = generate_with_retry(title_prompt).strip().replace('"', '').replace("'", "")
+def save_post(title, body):
+    now = datetime.utcnow()
+    date_str = now.strftime("%Y-%m-%d")
+    time_str = now.strftime("%Y-%m-%d %H:%M:%S")
+    slug = "".join(c if c.isalnum() else "-" for c in title.lower())
+    slug = "-".join(filter(None, slug.split("-")))[:50]
+    if not slug:
+        slug = str(int(time.time()))
+    filename = f"{date_str}-{slug}.md"
+    filepath = os.path.join('_posts', filename)
+    os.makedirs('_posts', exist_ok=True)
+    
+    frontmatter = f"---\nlayout: post\ntitle: \"{title}\"\ndate: {time_str}\ncategories: [Info]\n---\n\n{body}\n"
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(frontmatter)
 
-category = '정보'
-if campaign.get('keywords'):
-    category = campaign['keywords'][0]
-
-date_str = now.strftime('%Y-%m-%d %H:%M:%S +0900')
-frontmatter = f"""---
-layout: post
-title: "{title}"
-date: {date_str}
-categories: [{category}]
----
-"""
-final_post = frontmatter + '\n\n' + body_content
-os.makedirs('_posts', exist_ok=True)
-filename = f'_posts/{file_date_str}-{file_time_str}.md'
-with open(filename, 'w', encoding='utf-8') as f:
-    f.write(final_post)
-
-print(f'Generated {filename}')
+if __name__ == "__main__":
+    title, body = generate_post()
+    save_post(title, body)
