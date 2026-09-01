@@ -151,8 +151,8 @@ Topic: {best_keyword}
 
     # [Pass 1: Draft]
     draft_prompt = f"""
-당신은 생활 정보와 팁을 제공하는 전문 에디터입니다.
-다음 캠페인 정보와 타겟 키워드를 바탕으로 정보성 블로그 초안(1500자)을 작성하세요.
+당신은 생활 정보와 꿀팁을 제공하는 친절하고 공감 능력이 뛰어난 전문 에디터입니다.
+검색자의 가장 큰 고민과 결핍(Pain Point)에 깊이 공감하면서, 유용한 정보를 제공하는 블로그 초안(1500자)을 작성하세요.
 
 [캠페인 정보]
 - 이름: {campaign['name']}
@@ -160,14 +160,18 @@ Topic: {best_keyword}
 - 타겟 키워드: {keyword_str}
 
 지침:
-- 너무 자극적이거나 공포감을 주는 단어(벌레, 악취 등)는 절대 금지.
+- 무조건적인 공포감 조성은 피하되, 검색자가 겪고 있는 불편함이나 두려움을 정확히 짚어주고 해결 가능한 문제로 부드럽게 유도하세요.
 - 소제목은 반드시 마크다운(##, ###) 사용.
 """
     draft_content = generate_with_retry(draft_prompt).strip()
 
     # [Pass 2: Check]
     check_prompt = f"""
-다음 작성된 초안을 SEO/AEO 관점에서 비판적으로 검토하고 개선사항 5가지를 작성하세요.
+다음 작성된 초안을 비판적으로 검토하고 개선사항 5가지를 도출하세요.
+1. SEO/AEO 관점에서 가독성이 좋은가?
+2. 검색자의 고민(Pain Point)에 대한 공감이 충분히 들어갔는가?
+3. 소개할 캠페인 상품이 억지 광고가 아니라, 고민을 해결해 줄 '현명하고 똑똑한 대안'으로 아주 자연스럽게 빌드업이 되었는가?
+
 [초안]
 {draft_content}
 """
@@ -177,9 +181,8 @@ Topic: {best_keyword}
     button_html = f'<div style="text-align: center; margin: 20px 0;"><a href="{campaign["link"]}" style="background-color: #ff5722; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 18px;" target="_blank">[DYNAMIC_BUTTON_TEXT]</a></div>'
 
     rewrite_prompt = f"""
-당신은 상위 1% 정보 매거진 에디터입니다.
+당신은 전환율을 극대화하는 상위 1% 마케팅 카피라이터이자 정보 매거진 에디터입니다.
 [초안]에 [전문가 피드백]을 100% 반영하여 2000자 내외의 최종 텍스트를 작성하세요.
-자극적인 단어 없이 깔끔한 정보성 톤앤매너를 유지하세요.
 
 [전문가 피드백]
 {feedback_content}
@@ -187,13 +190,15 @@ Topic: {best_keyword}
 [초안]
 {draft_content}
 
-[필수 구조 규칙]
-글 서론과 결론 부근에 다음 버튼 HTML 태그를 그대로 2회 삽입하세요.
-단, [DYNAMIC_BUTTON_TEXT] 부분을 문맥에 맞게 매력적인 문구(예: 무료 상담 신청하기, 혜택 확인하기 등)로 수정해서 넣으세요.
+[하이브리드 작성 및 필수 구조 규칙]
+1. 글의 전체적인 톤앤매너는 '신뢰감 있는 깔끔한 정보성'을 유지하여 포털의 스팸 필터를 피하세요.
+2. 하지만 글의 서론과 결론 부근, 즉 **버튼이 들어갈 위치 바로 앞 문장**만큼은 독자가 참지 못하고 클릭하도록 만드는 강력한 행동 촉구(설득형 CTA) 문장으로 분위기를 확 반전시키세요.
+3. 아래의 버튼 HTML 태그를 서론 끝, 결론 끝에 각각 1번씩 총 2번 삽입하세요.
+단 [DYNAMIC_BUTTON_TEXT] 부분을 '지금 당장 혜택 확인하기', '무료로 고민 해결하기' 등 뼈를 때리는 강력한 문구로 수정하세요.
 {button_html}
 
 [시각적 강조 규칙 - 반드시 적용]
-1. 본문 중간에 딱 1번 아래의 감성 사진 마크다운을 본문과 가장 자연스러운 위치에 줄바꿈하여 삽입하세요.
+1. 본문 중간(대략 1번 아래)에 감성 사진 마크다운을 본문과 가장 자연스러운 위치에 줄바꿈하여 삽입하세요.
 {vibe_markdown}
 """
     final_text = generate_with_retry(rewrite_prompt).strip()
@@ -246,7 +251,7 @@ Topic: {best_keyword}
     final_body = image_markdown + ad_top + "\n\n" + body_content + "\n\n" + ad_bottom
     return title, final_body
 
-def save_post(title, body):
+def save_post(title, body, thumb_rel_path):
     now = datetime.utcnow()
     date_str = now.strftime("%Y-%m-%d")
     time_str = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -258,10 +263,15 @@ def save_post(title, body):
     filepath = os.path.join('_posts', filename)
     os.makedirs('_posts', exist_ok=True)
     
-    frontmatter = f"---\nlayout: post\ntitle: \"{title}\"\ndate: {time_str}\ncategories: [Info]\n---\n\n{body}\n"
+    frontmatter = f"---\nlayout: post\ntitle: \"{title}\"\ndate: {time_str}\ncategories: [Info]
+image: /{thumb_rel_path}
+---
+
+{body}
+\"
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(frontmatter)
 
 if __name__ == "__main__":
-    title, body = generate_post()
-    save_post(title, body)
+    title, body, thumb = generate_post()
+    save_post(title, body, thumb)
