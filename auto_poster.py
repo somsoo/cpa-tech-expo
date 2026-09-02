@@ -23,7 +23,7 @@ if not api_keys_str:
     exit(1)
 
 API_KEYS = [k.strip() for k in api_keys_str.split(',') if k.strip()]
-MODELS = ['gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']
+MODELS = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']
 
 def generate_with_retry(prompt, is_json=False):
     generation_config = {"response_mime_type": "application/json"} if is_json else None
