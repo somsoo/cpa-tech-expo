@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'ko' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title | escape }} | {{ site.title | escape }}</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2228289204702106" crossorigin="anonymous"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    
+    body { font-family: 'Pretendard', sans-serif; }
+    /* ?μ긽???쒓? ??댄룷洹몃옒??(臾몃떒 媛꾧꺽 諛?以꾧컙寃? */
+    .prose p {
+        margin-bottom: 1.75em !important;
+        line-height: 1.8 !important;
+        word-break: keep-all;
+    }
+    .prose h1, .prose h2, .prose h3 {
+        margin-top: 2em !important;
+        margin-bottom: 1em !important;
+        word-break: keep-all;
+    }
+    .prose img { border-radius: 0.75rem; max-height: 500px; width: 100%; object-fit: cover; aspect-ratio: 16/9; margin-top: 2em; margin-bottom: 2em; }
+
+    .prose img { border-radius: 0.75rem; max-height: 500px; width: 100%; object-fit: cover; aspect-ratio: 16/9; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased pt-16">
+  <!-- Sticky Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="{{ '/' | relative_url }}" class="text-xl font-bold text-gray-900 tracking-tight">{{ site.title | escape }}</a>
+      <nav>
+        <a href="{{ '/' | relative_url }}" class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition">전체 글 보기</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8 min-h-screen">
+    {{ content }}
+  </main>
+
+  <footer class="bg-white border-t border-gray-200 py-8 text-center text-sm text-gray-500">
+    &copy; {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.
+  </footer>
+</body>
+</html>
+
+
