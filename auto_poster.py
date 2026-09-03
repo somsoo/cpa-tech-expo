@@ -172,10 +172,10 @@ def generate_post(campaign, keyword):
     thumb_rel_path = create_text_thumbnail(thumb_hook, thumb_filename)
     
     cpa_button = f"""
-<div style="margin: 40px 0; padding: 25px; text-align: center; border: 2px solid #3b82f6; border-radius: 12px; background-color: #eff6ff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-    <h3 style="color: #1d4ed8; margin-bottom: 12px; font-weight: bold; font-size: 20px;">💡 {campaign['name']}</h3>
+<div style="margin: 30px 0; padding: 20px; box-sizing: border-box; text-align: center; border: 2px solid #3b82f6; border-radius: 12px; background-color: #eff6ff; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+    <h3 style="color: #1d4ed8; margin-bottom: 12px; font-weight: bold; font-size: 17px; word-break: keep-all; word-break: keep-all;">💡 {campaign['name']}</h3>
     <p style="font-size: 16px; margin-bottom: 20px; color: #374151; word-break: keep-all;">{campaign['benefits']}</p>
-    <a href="{campaign['link']}" target="_blank" style="display: inline-block; padding: 14px 28px; background-color: #2563eb; color: white; font-size: 18px; font-weight: bold; text-decoration: none; border-radius: 8px; transition: background-color 0.3s; box-shadow: 0 2px 4px rgba(37,99,235,0.3);">👉 {cta_text}</a>
+    <a href="{campaign['link']}" target="_blank" style="display: block; width: 100%; max-width: 320px; margin: 0 auto; padding: 16px 20px; box-sizing: border-box; background-color: #2563eb; color: white; font-size: 17px; word-break: keep-all; font-weight: bold; text-decoration: none; border-radius: 8px; transition: background-color 0.3s; box-shadow: 0 2px 4px rgba(37,99,235,0.3);">👉 {cta_text}</a>
 </div>
 """
     ad_bottom = '\n<div class="manual-ad-container" style="margin: 30px 0; text-align: center;">\n<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2228289204702106" data-ad-slot="2231432699" data-ad-format="auto" data-full-width-responsive="true"></ins>\n<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>\n</div>\n'
