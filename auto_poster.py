@@ -27,7 +27,9 @@ def generate_with_retry(prompt, is_json=False):
     raise Exception("Critical: All API models exhausted!")
 
 def create_text_thumbnail(text, filename_prefix="thumb"):
-    lines = text.strip().split('\n')
+    import urllib.request
+    lines = text.strip().split('
+')
     lines = [line for line in lines if line.strip()][:3]
     img_width, img_height = 1200, 500
     background_color = (40, 50, 70)
@@ -36,7 +38,14 @@ def create_text_thumbnail(text, filename_prefix="thumb"):
         from PIL import Image, ImageDraw, ImageFont
         img = Image.new('RGB', (img_width, img_height), color=background_color)
         draw = ImageDraw.Draw(img)
-        font_path = "malgun.ttf"
+        
+        font_path = "NanumGothic-Bold.ttf"
+        if not os.path.exists(font_path):
+            try:
+                urllib.request.urlretrieve("https://github.com/google/fonts/raw/main/ofl/nanumgothic/NanumGothic-Bold.ttf", font_path)
+            except:
+                pass
+                
         try:
             font = ImageFont.truetype(font_path, 80)
         except:
@@ -58,9 +67,10 @@ def create_text_thumbnail(text, filename_prefix="thumb"):
             
         os.makedirs('assets/images', exist_ok=True)
         img_path = f'assets/images/{filename_prefix}.webp'
-        img.save(img_path, 'WEBP', quality=90)
+        img.save(img_path, 'WEBP', quality=85)
         return img_path
-    except:
+    except Exception as e:
+        print(f"Thumbnail error: {e}")
         return ""
 
 def download_vibe_image(img_url, filename_prefix):
