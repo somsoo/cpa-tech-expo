@@ -1,4 +1,4 @@
-import os
+﻿import os
 import json
 import random
 import time
@@ -11,7 +11,7 @@ if not api_keys_str:
     print('GEMINI_API_KEY is not set.')
     exit(1)
 API_KEYS = [k.strip() for k in api_keys_str.split(',') if k.strip()]
-models_to_use = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']
+models_to_use = ['gemini-2.5-flash', 'gemini-3.6-flash', 'gemini-3.1-flash-lite']
 genai.configure(api_key=API_KEYS[0])
 
 def generate_with_retry(prompt, is_json=False):
@@ -28,8 +28,7 @@ def generate_with_retry(prompt, is_json=False):
 
 def create_text_thumbnail(text, filename_prefix="thumb"):
     import urllib.request
-    lines = text.strip().split('
-')
+    lines = text.strip().split('\n')
     lines = [line for line in lines if line.strip()][:3]
     img_width, img_height = 1200, 500
     background_color = (40, 50, 70)
