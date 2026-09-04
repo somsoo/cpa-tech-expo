@@ -24,6 +24,31 @@
     .prose img { border-radius: 0.75rem; max-height: 500px; width: 100%; object-fit: cover; aspect-ratio: 16/9; margin-top: 2em; margin-bottom: 2em; }
 
     .prose img { border-radius: 0.75rem; max-height: 500px; width: 100%; object-fit: cover; aspect-ratio: 16/9; }
+  
+    /* 애드센스 및 광고 컨테이너 중앙 정렬 + 좌우 반응형 가득 채우기 */
+    .manual-ad-container {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        margin: 30px auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        clear: both !important;
+        overflow: hidden !important;
+    }
+    .manual-ad-container ins.adsbygoogle {
+        display: block !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+        min-width: 280px !important;
+    }
+    /* 구글 광고 내부 iframe 강제 중앙 정렬 */
+    .manual-ad-container ins.adsbygoogle iframe {
+        margin: 0 auto !important;
+        display: block !important;
+    }
+
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased pt-16">
