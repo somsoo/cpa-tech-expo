@@ -12,20 +12,21 @@ if not api_keys_str:
     exit(1)
 API_KEYS = [k.strip() for k in api_keys_str.split(',') if k.strip()]
 models_to_use = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']
-genai.configure(api_key=API_KEYS[0])
 
 def generate_with_retry(prompt, is_json=False):
-    for model_name in models_to_use:
-        try:
-            model = genai.GenerativeModel(model_name)
-            config = genai.GenerationConfig(response_mime_type="application/json") if is_json else None
-            response = model.generate_content(prompt, generation_config=config)
-            if response.text:
-                return response.text
-        except Exception as e:
-            pass
-    raise Exception("Critical: All API models exhausted!")
-
+    for key in API_KEYS:
+        genai.configure(api_key=key)
+        for model_name in models_to_use:
+            try:
+                model = genai.GenerativeModel(model_name)
+                config = genai.GenerationConfig(response_mime_type='application/json') if is_json else None
+                response = model.generate_content(prompt, generation_config=config)
+                if response.text and response.text.strip():
+                    return response.text.strip()
+            except Exception as e:
+                time.sleep(1)
+                continue
+    raise Exception('Critical: All API keys and models exhausted!')
 def create_text_thumbnail(text, filename_prefix="thumb"):
     import urllib.request
     lines = text.strip().split('\n')
