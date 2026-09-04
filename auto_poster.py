@@ -11,7 +11,7 @@ if not api_keys_str:
     print('GEMINI_API_KEY is not set.')
     exit(1)
 API_KEYS = [k.strip() for k in api_keys_str.split(',') if k.strip()]
-models_to_use = ['gemini-2.5-flash', 'gemini-3.6-flash', 'gemini-3.1-flash-lite']
+models_to_use = ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite']
 genai.configure(api_key=API_KEYS[0])
 
 def generate_with_retry(prompt, is_json=False):
