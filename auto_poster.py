@@ -180,6 +180,17 @@ def generate_post(campaign, keyword):
 """
     ad_bottom = '\n<div class="manual-ad-container" style="margin: 30px 0; text-align: center;">\n<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2228289204702106" data-ad-slot="2231432699" data-ad-format="auto" data-full-width-responsive="true"></ins>\n<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>\n</div>\n'
     
+    # 본문 중간 심플 퀵링크 추가 (소제목 3번 또는 2번 위)
+    mid_cta = f'''
+<div style="margin: 25px auto; max-width: 480px; text-align: center;">
+    <a href="{campaign['link']}" target="_blank" style="display: block; padding: 14px 20px; background-color: #2563eb; color: #ffffff; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(37,99,235,0.25); word-break: keep-all;">👉 [{campaign['name']}] 실시간 혜택 및 신청 바로가기 ▶</a>
+</div>
+'''
+    if "## 3." in processed_text:
+        processed_text = processed_text.replace("## 3.", f"{mid_cta}\n\n## 3.", 1)
+    elif "## 2." in processed_text:
+        processed_text = processed_text.replace("## 2.", f"{mid_cta}\n\n## 2.", 1)
+
     final_text = processed_text + cpa_button + ad_bottom
     return title, final_text, thumb_rel_path
 
