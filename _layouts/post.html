@@ -3,7 +3,7 @@ layout: default
 ---
 <article class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-8 md:p-12 lg:p-16 mt-6">
   <header class="mb-8 text-center">
-    <h1 class="text-2xl md:text-4xl font-extrabold text-gray-900 leading-tight mb-4">{{ page.title | escape }}</h1>
+    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight mb-4">{{ page.title | escape }}</h1>
     <div class="text-gray-400 text-sm font-medium">
       <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y-%m-%d" }}</time>
     </div>
@@ -21,7 +21,7 @@ layout: default
     📢 이 포스팅은 제휴마케팅 활동의 일환으로, 이에 따른 일정액의 수수료를 지급받습니다.
   </div>
 
-  <div class="prose prose-blue prose-lg md:prose-xl max-w-none text-gray-700 leading-relaxed">
+  <div class="prose prose-blue prose-base md:prose-lg max-w-none text-gray-700 leading-relaxed">
     {{ content }}
   </div>
 </article>

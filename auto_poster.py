@@ -98,7 +98,7 @@ def generate_post(campaign, keyword):
     profile_prompt = f"당신은 30~50대를 위한 전문 '차세대 디지털 인프라와 산업 트렌드를 조망하는 B2B 테크 큐레이터'입니다. 주요 전문 분야: '데이터센터 박람회 무료 사전등록, AI 인프라 및 친환경 쿨링 기술 트렌드, 산업 네트워킹'. '{keyword}'의 타겟 유저가 가장 갈망하는 혜택과 현실적 고민이 무엇인지 전문가의 시각에서 3문장으로 날카롭게 분석하세요."
     profiling = generate_with_retry(profile_prompt)
     
-    outline_prompt = f"'{profiling}'을 바탕으로 '{keyword}'에 대한 정보성 블로그 포스팅 목차(H2 3개)를 마크다운으로 작성하세요."
+    outline_prompt = f"'{profiling}'을 바탕으로 '{keyword}'에 대한 정보성 블로그 포스팅 목차(소제목 3~4개)를 마크다운으로 작성하세요."
     outline = generate_with_retry(outline_prompt)
 
     draft_prompt = f"""
@@ -127,7 +127,9 @@ def generate_post(campaign, keyword):
     """
     final_text = generate_with_retry(rewrite_prompt)
     
-    final_text = re.sub(r'(?i)^(?:#+\s*)?H[23]:\s*', '', final_text, flags=re.MULTILINE)
+    final_text = re.sub(r'(?im)^(\s*#{2,4}\s*(?:\*\*)?)H[234]\s*[:.]?\s*', r'\1', final_text)
+    final_text = re.sub(r'(?im)^(\s*#{2,4}\s*)\*\*(H[234]\s*[:.]?\s*)?', r'\1', final_text)
+    final_text = re.sub(r'(?im)^(\s*#{2,4}\s+[^\n*]+)\*\*\s*$', r'\1', final_text)
     final_text = re.sub(r'^---.*?---\s*', '', final_text, flags=re.DOTALL)
 
 

@@ -49,6 +49,27 @@
         display: block !important;
     }
 
+  
+    /* 모바일/PC 반응형 소제목 글자 크기 최적화 */
+    .prose h2 {
+        font-size: 1.25rem !important;
+        margin-top: 1.5em !important;
+        margin-bottom: 0.75em !important;
+        word-break: keep-all;
+    }
+    @media (min-width: 768px) {
+        .prose h2 { font-size: 1.5rem !important; }
+    }
+    .prose h3 {
+        font-size: 1.1rem !important;
+        margin-top: 1.25em !important;
+        margin-bottom: 0.5em !important;
+        word-break: keep-all;
+    }
+    @media (min-width: 768px) {
+        .prose h3 { font-size: 1.25rem !important; }
+    }
+
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased pt-16">
