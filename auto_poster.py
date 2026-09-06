@@ -1,4 +1,4 @@
-﻿import os
+import os
 import json
 import random
 import time
@@ -131,6 +131,11 @@ def generate_post(campaign, keyword):
     final_text = re.sub(r'(?im)^(\s*#{2,4}\s*)\*\*(H[234]\s*[:.]?\s*)?', r'\1', final_text)
     final_text = re.sub(r'(?im)^(\s*#{2,4}\s+[^\n*]+)\*\*\s*$', r'\1', final_text)
     final_text = re.sub(r'^---.*?---\s*', '', final_text, flags=re.DOTALL)
+    # Dummy links / Fake URLs cleanup
+    dummy_md_pattern = r'\[([^\]]+)\]\((?:https?:\/\/)?(?:www\.)?(?:example\.(?:com|org)|test\.com|yourlink\.com|sample\.com)[^\)]*\)'
+    final_text = re.sub(dummy_md_pattern, r'\1', final_text)
+    dummy_html_pattern = r'<a\s+[^>]*href=[\'"](?:https?:\/\/)?(?:www\.)?(?:example\.(?:com|org)|test\.com|yourlink\.com|sample\.com)[^\'"]*[\'"][^>]*>(.*?)<\/a>'
+    final_text = re.sub(dummy_html_pattern, r'\1', final_text)
 
 
     meta_prompt = f"""
