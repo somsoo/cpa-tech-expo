@@ -131,11 +131,12 @@ def generate_post(campaign, keyword):
     final_text = re.sub(r'(?im)^(\s*#{2,4}\s*)\*\*(H[234]\s*[:.]?\s*)?', r'\1', final_text)
     final_text = re.sub(r'(?im)^(\s*#{2,4}\s+[^\n*]+)\*\*\s*$', r'\1', final_text)
     final_text = re.sub(r'^---.*?---\s*', '', final_text, flags=re.DOTALL)
-    # Dummy links / Fake URLs cleanup
+    # Replace any dummy/example links with real CPA tracking link
+    cpa_target_url = campaign.get('link', '#') if isinstance(campaign, dict) else campaign['link']
     dummy_md_pattern = r'\[([^\]]+)\]\((?:https?:\/\/)?(?:www\.)?(?:example\.(?:com|org)|test\.com|yourlink\.com|sample\.com)[^\)]*\)'
-    final_text = re.sub(dummy_md_pattern, r'\1', final_text)
+    final_text = re.sub(dummy_md_pattern, rf'[\1]({cpa_target_url})', final_text)
     dummy_html_pattern = r'<a\s+[^>]*href=[\'"](?:https?:\/\/)?(?:www\.)?(?:example\.(?:com|org)|test\.com|yourlink\.com|sample\.com)[^\'"]*[\'"][^>]*>(.*?)<\/a>'
-    final_text = re.sub(dummy_html_pattern, r'\1', final_text)
+    final_text = re.sub(dummy_html_pattern, rf'<a href="{cpa_target_url}" target="_blank">\1</a>', final_text)
 
 
     meta_prompt = f"""
@@ -193,10 +194,11 @@ def generate_post(campaign, keyword):
     <a href="{campaign['link']}" target="_blank" style="display: block; padding: 14px 20px; background-color: #2563eb; color: #ffffff; font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(37,99,235,0.25); word-break: keep-all;">👉 [{campaign['name']}] 실시간 혜택 및 신청 바로가기 ▶</a>
 </div>
 '''
+    # 3-step CTA buttons: 상단(2번 소제목 위) + 중단(3번 소제목 위) + 하단(종합 박스)
+    if "## 2." in processed_text:
+        processed_text = processed_text.replace("## 2.", f"{mid_cta}\n\n## 2.", 1)
     if "## 3." in processed_text:
         processed_text = processed_text.replace("## 3.", f"{mid_cta}\n\n## 3.", 1)
-    elif "## 2." in processed_text:
-        processed_text = processed_text.replace("## 2.", f"{mid_cta}\n\n## 2.", 1)
 
     final_text = processed_text + cpa_button + ad_bottom
     return title, final_text, thumb_rel_path
