@@ -21,7 +21,7 @@ permalink: /privacy/
     <ul class="list-disc pl-5 space-y-1">
       <li>접속 IP 주소, 브라우저 유형 및 버전, 운영체제(OS)</li>
       <li>방문 일시, 서비스 이용 기록, 페이지 뷰 로그</li>
-      <li>이메일 문의 시: 문의자 이메일 주소, 문의 내용 (직접 제공 시에 한함)</li>
+      <li>콘텐츠 열람 기록 및 일반적인 접속 로그</li>
     </ul>
 
     <h2 class="text-xl font-bold text-gray-900 border-l-4 border-blue-600 pl-3">2. 쿠키(Cookie)의 운용 및 거부 권리</h2>
@@ -45,7 +45,7 @@ permalink: /privacy/
     <p>개인정보 처리 및 보호 관련 불만 처리, 피해 구제 등 문의사항은 아래의 담당 부서로 문의하시기 바랍니다:</p>
     <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 text-sm text-gray-600">
       <p>담당 부서: 개인정보 보호팀</p>
-      <p>문의 이메일: <strong>contact@enjoy-onepage.com</strong></p>
+      <p>문의 접수: <strong>시스템 익명 채널 비공개 접수</strong></p>
     </div>
   </div>
 </div>

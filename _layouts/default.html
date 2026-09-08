@@ -146,8 +146,9 @@
   <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
       <a href="{{ '/' | relative_url }}" class="text-lg sm:text-xl font-bold text-gray-900 tracking-tight truncate mr-2">{{ site.title | escape }}</a>
-      <nav class="flex items-center space-x-4 shrink-0 text-sm font-semibold">
+      <nav class="flex items-center space-x-3 sm:space-x-5 shrink-0 text-sm font-semibold">
         <a href="{{ '/' | relative_url }}" class="text-gray-700 hover:text-blue-600 transition">전체 글</a>
+        <a href="{{ '/guide/' | relative_url }}" class="text-blue-600 hover:text-blue-800 transition font-bold">실전 가이드</a>
         <a href="{{ '/about/' | relative_url }}" class="text-gray-700 hover:text-blue-600 transition">소개</a>
       </nav>
     </div>
@@ -161,6 +162,8 @@
   <footer class="bg-white border-t border-gray-200 py-10 text-center text-sm text-gray-500 mt-12">
     <div class="max-w-6xl mx-auto px-4">
       <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4 text-xs font-semibold text-gray-600">
+        <a href="{{ '/guide/' | relative_url }}" class="text-blue-600 hover:text-blue-800 transition font-bold">실전 가이드</a>
+        <span class="text-gray-300">|</span>
         <a href="{{ '/about/' | relative_url }}" class="hover:text-blue-600 transition">사이트 소개</a>
         <span class="text-gray-300">|</span>
         <a href="{{ '/terms/' | relative_url }}" class="hover:text-blue-600 transition">이용약관</a>

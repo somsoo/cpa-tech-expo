@@ -39,9 +39,11 @@ permalink: /about/
       독자 여러분의 피드백은 사이트 운영의 가장 소중한 밑거름입니다. 내용의 오류 제보, 보완 요청, 제휴 및 권리 침해 관련 문의는 언제든지 아래로 연락 주시기 바랍니다.
     </p>
     <div class="bg-gray-50 rounded-xl p-5 border border-gray-200 text-sm text-gray-600">
-      <p class="font-semibold text-gray-800 mb-1">📬 독자 지원 센터</p>
-      <p>이메일: <strong>contact@enjoy-onepage.com</strong></p>
-      <p class="text-xs text-gray-500 mt-1">※ 접수된 문의는 영업일 기준 48시간 이내에 성실히 검토 후 회신드립니다.</p>
+      <p class="font-semibold text-gray-800 mb-1">📬 독자 지원 및 정보 제보</p>
+      <p class="text-xs text-gray-500 leading-relaxed">
+        본 사이트는 독자의 프라이버시 보호 및 스팸 방지를 위해 개인정보를 일체 수집하지 않으며, 
+        콘텐츠 오류 제보 및 정정 요청은 시스템 익명 접수 채널을 통해 비공개로 안전하게 처리됩니다.
+      </p>
     </div>
   </div>
 </div>
