@@ -78,14 +78,17 @@
     
     /* 본문 가독성 최적화 */
     .prose p {
-        margin-bottom: 1.75em !important;
-        line-height: 1.8 !important;
+        margin-bottom: 1.25em !important;
+        line-height: 1.75 !important;
         word-break: keep-all;
     }
     .prose h1, .prose h2, .prose h3 {
-        margin-top: 2em !important;
-        margin-bottom: 1em !important;
+        margin-top: 1.5em !important;
+        margin-bottom: 0.5em !important;
         word-break: keep-all;
+    }
+    .prose > :first-child {
+        margin-top: 0 !important;
     }
     .prose img { 
         border-radius: 0.75rem; 
@@ -93,8 +96,8 @@
         width: 100%; 
         object-fit: cover; 
         aspect-ratio: 16/9; 
-        margin-top: 2em; 
-        margin-bottom: 2em; 
+        margin-top: 1.5em; 
+        margin-bottom: 1.5em; 
     }
 
     /* 애드센스 및 광고 컨테이너 중앙 정렬 + 좌우 반응형 가득 채우기 */

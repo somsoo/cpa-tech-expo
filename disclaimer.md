@@ -4,14 +4,14 @@ title: "제휴 공시 및 면책조항"
 permalink: /disclaimer/
 ---
 
-<div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-10 md:p-12 mt-6">
-  <div class="border-b border-gray-100 pb-6 mb-8">
+<div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-8 md:p-10 mt-4">
+  <div class="border-b border-gray-100 pb-4 mb-4">
     <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Disclaimer & Disclosure</span>
     <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-2">제휴 공시 및 면책조항</h1>
     <p class="text-gray-500 mt-2 text-sm">공정거래위원회 심사지침 준수 공시</p>
   </div>
 
-  <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-6">
+  <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-4">
     <h2 class="text-xl font-bold text-gray-900 border-l-4 border-blue-600 pl-3">1. 공정거래위원회 지침 준수 및 제휴마케팅 공시</h2>
     <p>
       <strong>IT 테크 & 데이터센터 전시회 정보</strong>(이하 "사이트")는 공정거래위원회의 「추천·보증 등에 관한 표시·광고 심사지침」 및 미국 연방거래위원회(FTC) 규정을 엄격히 준수합니다.

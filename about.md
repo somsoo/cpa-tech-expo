@@ -4,14 +4,14 @@ title: "사이트 소개"
 permalink: /about/
 ---
 
-<div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-10 md:p-12 mt-6">
-  <div class="border-b border-gray-100 pb-6 mb-8">
+<div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-8 md:p-10 mt-4">
+  <div class="border-b border-gray-100 pb-4 mb-4">
     <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">About Us</span>
     <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-2">IT 테크 & 데이터센터 전시회 정보 소개</h1>
     <p class="text-gray-500 mt-2 text-sm sm:text-base leading-relaxed">2026 데이터센터코리아 사전등록 및 B2B 클라우드, AI 최신 기술 동향을 제공합니다.</p>
   </div>
 
-  <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-6">
+  <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-4">
     <h2 class="text-xl font-bold text-gray-900 border-l-4 border-blue-600 pl-3">1. 사이트 운영 목적 및 비전</h2>
     <p>
       <strong>IT 테크 & 데이터센터 전시회 정보</strong>는 현대 정보 과잉 시대 속에서 독자 여러분께 실질적인 도움이 되는 핵심 정보를 정제하여 전달하는 <strong>전문 정보 큐레이션 포털</strong>입니다.

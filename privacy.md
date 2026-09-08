@@ -4,14 +4,14 @@ title: "개인정보처리방침"
 permalink: /privacy/
 ---
 
-<div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-10 md:p-12 mt-6">
-  <div class="border-b border-gray-100 pb-6 mb-8">
+<div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-8 md:p-10 mt-4">
+  <div class="border-b border-gray-100 pb-4 mb-4">
     <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Privacy Policy</span>
     <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-2">개인정보처리방침</h1>
     <p class="text-gray-500 mt-2 text-sm">최종 개정일: 2026년 9월 8일</p>
   </div>
 
-  <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-6">
+  <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-4">
     <p>
       <strong>IT 테크 & 데이터센터 전시회 정보</strong>(이하 "사이트")는 이용자의 개인정보 보호를 매우 중요시하며, 「개인정보 보호법」 및 정보통신망 이용촉진 및 정보보호 등에 관한 법률을 준수하고 있습니다. 본 방침은 사이트가 어떠한 정보를 수집하고 어떻게 활용하는지 투명하게 안내합니다.
     </p>

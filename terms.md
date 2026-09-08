@@ -4,14 +4,14 @@ title: "이용약관"
 permalink: /terms/
 ---
 
-<div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-10 md:p-12 mt-6">
-  <div class="border-b border-gray-100 pb-6 mb-8">
+<div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-8 md:p-10 mt-4">
+  <div class="border-b border-gray-100 pb-4 mb-4">
     <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">Terms of Service</span>
     <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-2">서비스 이용약관</h1>
     <p class="text-gray-500 mt-2 text-sm">시행일: 2026년 9월 8일</p>
   </div>
 
-  <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-6">
+  <div class="prose prose-blue max-w-none text-gray-700 leading-relaxed space-y-4">
     <h2 class="text-xl font-bold text-gray-900 border-l-4 border-blue-600 pl-3">제1조 (목적)</h2>
     <p>
       본 약관은 <strong>IT 테크 & 데이터센터 전시회 정보</strong>(이하 "사이트")가 제공하는 인터넷 정보 서비스의 이용 조건 및 절차, 이용자와 사이트 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
