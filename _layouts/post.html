@@ -1,4 +1,4 @@
-﻿---
+---
 layout: default
 ---
 <article class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-8 md:p-12 lg:p-16 mt-6">
@@ -10,19 +10,41 @@ layout: default
   </header>
 
   {% if page.image %}
-  <div class="w-full aspect-video rounded-xl overflow-hidden mb-10 bg-gray-100 shadow-inner">
+  <div class="w-full aspect-video rounded-xl overflow-hidden mb-8 bg-gray-100 shadow-inner">
     <img src="{{ page.image | relative_url }}" class="w-full h-full object-cover" alt="Hero Image">
   </div>
   {% endif %}
 
-  <!-- 蹂몃Ц ?곸뿭 -->
-    <!-- 공정위 대가성 문구 (2024년 개정법 준수) -->
-  <div class="mb-8 p-4 bg-gray-50 border-l-4 border-gray-400 text-gray-600 text-sm md:text-base font-semibold rounded-r-lg shadow-sm">
-    📢 이 포스팅은 제휴마케팅 활동의 일환으로, 이에 따른 일정액의 수수료를 지급받습니다.
+  <!-- 본문 상단 수동 광고 (Top Ad) -->
+  <div class="manual-ad-container mb-8 text-center">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2228289204702106"
+         data-ad-slot="2231432699"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
 
+  <!-- 본문 영역 (외부 제휴링크 없는 100% 순수 정보글) -->
   <div class="prose prose-blue prose-base md:prose-lg max-w-none text-gray-700 leading-relaxed">
     {{ content }}
   </div>
 </article>
 
+<!-- 중간 광고 (Mid Ad) 자동 삽입 스크립트 (2번째 H2 소제목 앞) -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var articleBody = document.querySelector(".prose");
+  if (!articleBody) return;
+  var h2Elements = articleBody.querySelectorAll("h2");
+  if (h2Elements.length >= 2) {
+    var targetH2 = h2Elements[1];
+    var midAd = document.createElement("div");
+    midAd.className = "manual-ad-container my-8 text-center";
+    midAd.innerHTML = '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2228289204702106" data-ad-slot="5979106011" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+    targetH2.parentNode.insertBefore(midAd, targetH2);
+    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+  }
+});
+</script>
