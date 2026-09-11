@@ -87,13 +87,14 @@ def get_golden_longtail_keyword(campaigns_file='campaigns.json', history_file='u
         campaigns = json.load(f)
     campaign = campaigns[0] if isinstance(campaigns, list) else campaigns
     
-    used = set()
+    used_list = []
     if os.path.exists(history_file):
         with open(history_file, 'r', encoding='utf-8') as f:
-            used = set([line.strip() for line in f if line.strip()])
+            used_list = [line.strip() for line in f if line.strip()]
+    used = set(used_list)
             
-    seed_keywords = campaign.get('keywords', ['인터배터리 & 미래 테크 엑스포'])
-    hint = seed_keywords[0] if seed_keywords else '인터배터리 & 미래 테크 엑스포'
+    seed_keywords = campaign.get('keywords', [campaign.get('name', '가이드')])
+    hint = seed_keywords[0] if seed_keywords else campaign.get('name', '가이드')
     
     candidates = set()
     candidates.update(mine_naver_ad_keywords(hint))
@@ -103,14 +104,31 @@ def get_golden_longtail_keyword(campaigns_file='campaigns.json', history_file='u
     filtered = [kw.strip() for kw in candidates if kw.strip() and kw.strip() not in used and len(kw.strip()) >= 3]
     
     if not filtered:
-        prompt = f"'{campaign["name"]}'에 대해 실제 사용자들이 네이버/구글에 검색할 만한 구체적인 질문형 롱테일 검색어 30개를 줄바꿈으로만 출력하세요."
+        camp_name = campaign.get('name', hint)
+        prompt = f"'{camp_name}'에 대해 실제 사용자들이 네이버/구글에 검색할 만한 구체적인 질문형 롱테일 검색어 30개를 줄바꿈으로만 출력하세요."
         res = generate_with_retry(prompt)
         for line in res.splitlines():
             line = line.strip().lstrip('0123456789.- ')
             if line and line not in used:
                 filtered.append(line)
                 
-    golden_keyword = random.choice(filtered) if filtered else f"{hint} 2026 가이드"
-    with open(history_file, 'a', encoding='utf-8') as f:
-        f.write(golden_keyword + '\n')
+    if filtered:
+        # [1순위] 새로운 키워드가 남아있을 때: 100% 신규 키워드 채택 후 장부 맨 아래에 추가
+        golden_keyword = random.choice(filtered)
+        with open(history_file, 'a', encoding='utf-8') as f:
+            f.write(golden_keyword + '\n')
+    elif used_list:
+        # [2순위] 키워드 풀 소진 시 FIFO 자연 순환 발동:
+        # 가장 오래전에 썼던 장부 맨 윗줄(0번 인덱스) 키워드를 재소환하고 맨 아랫줄로 이동 (원형 큐)
+        golden_keyword = used_list.pop(0)
+        used_list.append(golden_keyword)
+        with open(history_file, 'w', encoding='utf-8') as f:
+            for kw in used_list:
+                f.write(kw + '\n')
+    else:
+        # 예외 상황 비상 폴백
+        golden_keyword = f"{hint} 2026 가이드"
+        with open(history_file, 'a', encoding='utf-8') as f:
+            f.write(golden_keyword + '\n')
+
     return golden_keyword, campaign
