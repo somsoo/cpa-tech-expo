@@ -1,0 +1,23 @@
+---
+layout: default
+title: "페이지를 찾을 수 없습니다 (404 Not Found)"
+permalink: /404.html
+---
+
+<div class="text-center py-16 px-4">
+  <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-50 text-blue-600 mb-6 text-3xl font-black">
+    404
+  </div>
+  <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">요청하신 페이지를 찾을 수 없습니다</h1>
+  <p class="text-gray-600 max-w-md mx-auto mb-8 text-base leading-relaxed">
+    입력하신 주소가 잘못되었거나, 페이지가 변경 또는 삭제되어 현재 사용할 수 없습니다. 아래 바로가기를 통해 원하시는 공식 지원 정보를 확인해 보세요.
+  </p>
+  <div class="flex flex-col sm:flex-row gap-3 justify-center">
+    <a href="{{ '/' | relative_url }}" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-sm transition">
+      홈으로 이동
+    </a>
+    <a href="{{ '/guide/' | relative_url }}" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-semibold rounded-xl text-gray-700 bg-white hover:bg-gray-50 shadow-sm transition">
+      공식 종합 가이드북 보기
+    </a>
+  </div>
+</div>
