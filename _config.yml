@@ -1,4 +1,4 @@
-﻿title: "IT 테크 & 데이터센터 전시회 정보"
+title: "IT 테크 & 데이터센터 전시회 정보"
 description: "2026 데이터센터코리아 사전등록 및 B2B 클라우드, AI 최신 기술 동향을 제공합니다."
 url: "https://data.enjoy-onepage.com"
 theme: minima
@@ -6,3 +6,12 @@ markdown: kramdown
 plugins:
   - jekyll-feed
   - jekyll-sitemap
+baseurl: ""
+permalink: /:year/:month/:day/:title/
+exclude:
+  - AI_MAINTENANCE_RULES.md
+  - POST_LOG.md
+  - used_keywords.txt
+  - Gemfile
+  - Gemfile.lock
+  - README.md
