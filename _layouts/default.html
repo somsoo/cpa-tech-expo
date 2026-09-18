@@ -349,6 +349,28 @@
     }
 
   </style>
+
+  <!-- 🛡️ 전사 공통 모바일 레이아웃 쉴드 & 가로 덜컥거림 영구 방지 (Zero-Overflow Guard) -->
+  <style id="layout-shield">
+    html, body {
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+    }
+    main, article, .prose {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    table {
+      display: block !important;
+      max-width: 100% !important;
+      overflow-x: auto !important;
+    }
+    .manual-ad-container, .manual-ad-container ins {
+      max-width: 100% !important;
+      overflow: hidden !important;
+    }
+  </style>
+
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased pt-16 flex flex-col min-h-screen">
   <!-- Sticky Header -->
